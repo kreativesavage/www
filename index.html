@@ -1,943 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kreative Savages — Digital Media Production</title>
-  <meta name="description" content="Kreative Savages — Film. Sound. Design. Story. A digital media production studio transforming society through creative expression." />
-  <meta property="og:title" content="Kreative Savages" />
-  <meta property="og:description" content="Film. Sound. Design. Story. A digital media production studio based in PNG." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.kreativesavages.com/" />
-  <meta name="twitter:card" content="summary_large_image" />
-
-  <!-- Favicon SVG inline -->
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
-
-  <style>
-    :root {
-      --ink: #0a0a0a;
-      --paper: #f5f2ec;
-      --bone: #e8e3da;
-      --rust: #c84b2f;
-      --rust-dim: #9c3a23;
-      --muted: #6b6560;
-      --line: rgba(255,255,255,0.08);
-      --font-display: 'Bebas Neue', sans-serif;
-      --font-body: 'DM Sans', sans-serif;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--ink);
-      color: var(--paper);
-      font-family: var(--font-body);
-      font-weight: 300;
-      line-height: 1.65;
-      overflow-x: hidden;
-    }
-
-    /* ─── Noise overlay ─── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.35;
-    }
-
-    /* ─── NAV ─── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem 4rem;
-      mix-blend-mode: normal;
-      transition: background 0.4s;
-    }
-    nav.scrolled {
-      background: rgba(10,10,10,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--line);
-    }
-    .nav-logo {
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      letter-spacing: 0.08em;
-      color: var(--paper);
-      text-decoration: none;
-    }
-    .nav-logo span { color: var(--rust); }
-    .nav-links {
-      display: flex;
-      gap: 2.5rem;
-      list-style: none;
-    }
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--paper); }
-    .nav-cta {
-      background: var(--rust);
-      color: var(--paper) !important;
-      padding: 0.5rem 1.2rem !important;
-      border-radius: 2px;
-    }
-    .nav-cta:hover { background: var(--rust-dim); color: var(--paper) !important; }
-
-    /* Hamburger */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 4px;
-    }
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 1.5px;
-      background: var(--paper);
-      transition: all 0.3s;
-    }
-
-    /* ─── HERO ─── */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 0 4rem 6rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 60% 40%, rgba(200,75,47,0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 80% at 10% 80%, rgba(200,75,47,0.06) 0%, transparent 60%),
-        var(--ink);
-    }
-    .hero-grid-lines {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--line) 1px, transparent 1px);
-      background-size: 80px 80px;
-      mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%);
-    }
-    .hero-eyebrow {
-      font-size: 0.72rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--rust);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.3s forwards;
-    }
-    .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(4.5rem, 12vw, 11rem);
-      line-height: 0.92;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      max-width: 900px;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.5s forwards;
-    }
-    .hero-title em {
-      font-style: normal;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(245,242,236,0.25);
-    }
-    .hero-sub {
-      margin-top: 2.5rem;
-      max-width: 480px;
-      font-size: 0.95rem;
-      color: var(--muted);
-      line-height: 1.7;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.7s forwards;
-    }
-    .hero-actions {
-      margin-top: 3rem;
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-      opacity: 0;
-      animation: fadeUp 0.8s 0.9s forwards;
-    }
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: var(--rust);
-      color: var(--paper);
-      text-decoration: none;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.9rem 2rem;
-      border-radius: 2px;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .btn-primary:hover { background: var(--rust-dim); transform: translateY(-2px); }
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-    .btn-ghost:hover { color: var(--paper); }
-    .hero-scroll-hint {
-      position: absolute;
-      bottom: 2.5rem;
-      right: 4rem;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      writing-mode: vertical-rl;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      opacity: 0;
-      animation: fadeIn 1s 1.4s forwards;
-    }
-    .hero-scroll-hint::before {
-      content: '';
-      display: block;
-      width: 1px;
-      height: 50px;
-      background: var(--rust);
-      animation: lineGrow 1.2s 1.6s both;
-    }
-
-    /* ─── MARQUEE ─── */
-    .marquee-wrap {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      overflow: hidden;
-      padding: 1rem 0;
-      background: rgba(200,75,47,0.04);
-    }
-    .marquee-track {
-      display: flex;
-      gap: 0;
-      animation: marquee 18s linear infinite;
-      white-space: nowrap;
-    }
-    .marquee-item {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      padding: 0 2.5rem;
-      text-transform: uppercase;
-    }
-    .marquee-item span { color: var(--rust); margin: 0 0.5rem; }
-
-    /* ─── SECTION BASE ─── */
-    section { padding: 8rem 4rem; }
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--rust);
-      margin-bottom: 1.5rem;
-    }
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(2.8rem, 6vw, 5.5rem);
-      line-height: 1;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-    }
-    .section-body {
-      font-size: 1rem;
-      color: var(--muted);
-      max-width: 540px;
-      line-height: 1.8;
-    }
-
-    /* ─── ABOUT ─── */
-    #about {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: center;
-    }
-    .about-visual {
-      position: relative;
-      aspect-ratio: 4/5;
-    }
-    .about-rect {
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(200,75,47,0.3);
-      transform: translate(16px, 16px);
-    }
-    .about-inner {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(200,75,47,0.15) 0%, rgba(10,10,10,0.8) 100%);
-      border: 1px solid rgba(245,242,236,0.07);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 2.5rem;
-    }
-    .about-stat {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-    .about-stat-num {
-      font-family: var(--font-display);
-      font-size: 4rem;
-      line-height: 1;
-      color: var(--rust);
-    }
-    .about-stat-label {
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .about-stat-divider {
-      width: 40px;
-      height: 1px;
-      background: var(--rust);
-      margin: 1.5rem 0;
-    }
-    .about-content .section-body { margin-bottom: 2.5rem; }
-    .mission-box {
-      border-left: 2px solid var(--rust);
-      padding-left: 1.5rem;
-      margin-top: 2.5rem;
-    }
-    .mission-box p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      font-style: italic;
-      line-height: 1.8;
-    }
-
-    /* ─── SERVICES ─── */
-    #services { background: rgba(255,255,255,0.015); }
-    .services-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: end;
-      margin-bottom: 5rem;
-    }
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--line);
-      border: 1px solid var(--line);
-    }
-    .service-card {
-      background: var(--ink);
-      padding: 3rem 2.5rem;
-      position: relative;
-      overflow: hidden;
-      transition: background 0.3s;
-      cursor: default;
-    }
-    .service-card::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0;
-      width: 100%;
-      height: 2px;
-      background: var(--rust);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .service-card:hover { background: rgba(200,75,47,0.05); }
-    .service-card:hover::before { transform: scaleX(1); }
-    .service-num {
-      font-family: var(--font-display);
-      font-size: 3.5rem;
-      line-height: 1;
-      color: rgba(200,75,47,0.15);
-      margin-bottom: 1.5rem;
-      transition: color 0.3s;
-    }
-    .service-card:hover .service-num { color: rgba(200,75,47,0.4); }
-    .service-icon {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    .service-name {
-      font-family: var(--font-display);
-      font-size: 1.8rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-      color: var(--paper);
-    }
-    .service-desc {
-      font-size: 0.85rem;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    /* ─── WORK / VIDEOS ─── */
-    #work {
-      text-align: center;
-    }
-    .work-header { margin-bottom: 4rem; }
-    .work-header .section-label, .work-header .section-title { text-align: center; }
-    .work-header .section-title { margin: 0 auto 1rem; }
-    .work-cta-wrap {
-      margin-top: 3.5rem;
-    }
-
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-    .video-card {
-      position: relative;
-      aspect-ratio: 16/9;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--line);
-      overflow: hidden;
-      border-radius: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: border-color 0.3s;
-    }
-    .video-card:hover { border-color: rgba(200,75,47,0.4); }
-    .video-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.8rem;
-      color: var(--muted);
-    }
-    .video-play-btn {
-      width: 52px; height: 52px;
-      border: 1px solid rgba(200,75,47,0.5);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--rust);
-      font-size: 1.1rem;
-      transition: background 0.3s;
-    }
-    .video-card:hover .video-play-btn { background: var(--rust); color: var(--paper); border-color: var(--rust); }
-    .video-label { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
-
-    /* ─── CONTACT ─── */
-    #contact {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: start;
-    }
-    .contact-info .section-body { margin-bottom: 3rem; }
-    .contact-detail {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-      padding: 1.5rem 0;
-      border-bottom: 1px solid var(--line);
-    }
-    .contact-detail:first-of-type { border-top: 1px solid var(--line); }
-    .contact-detail-label {
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--rust);
-    }
-    .contact-detail a, .contact-detail span {
-      font-size: 0.95rem;
-      color: var(--paper);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .contact-detail a:hover { color: var(--rust); }
-    .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-    .form-field { display: flex; flex-direction: column; gap: 0.5rem; }
-    .form-field label {
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .form-field input,
-    .form-field textarea,
-    .form-field select {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--line);
-      color: var(--paper);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      font-weight: 300;
-      padding: 0.85rem 1rem;
-      border-radius: 2px;
-      outline: none;
-      transition: border-color 0.2s;
-      -webkit-appearance: none;
-    }
-    .form-field input:focus,
-    .form-field textarea:focus,
-    .form-field select:focus { border-color: var(--rust); }
-    .form-field textarea { resize: vertical; min-height: 120px; }
-    .form-field select option { background: #1a1a1a; }
-    .btn-submit {
-      background: var(--rust);
-      color: var(--paper);
-      border: none;
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 1rem 2.5rem;
-      cursor: pointer;
-      border-radius: 2px;
-      align-self: flex-start;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .btn-submit:hover { background: var(--rust-dim); transform: translateY(-2px); }
-
-    /* ─── FOOTER ─── */
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 3rem 4rem;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 2rem;
-    }
-    .footer-brand {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      letter-spacing: 0.08em;
-      color: var(--paper);
-    }
-    .footer-brand span { color: var(--rust); }
-    .footer-social {
-      display: flex;
-      gap: 1.5rem;
-    }
-    .footer-social a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-    .footer-social a:hover { color: var(--paper); }
-    .footer-copy {
-      text-align: right;
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
-
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
-    }
-    @keyframes lineGrow {
-      from { transform: scaleY(0); transform-origin: top; }
-      to   { transform: scaleY(1); transform-origin: top; }
-    }
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* Reveal on scroll */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 900px) {
-      nav { padding: 1.2rem 2rem; }
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
-
-      #hero { padding: 0 2rem 5rem; }
-      section { padding: 5rem 2rem; }
-
-      #about { grid-template-columns: 1fr; gap: 3rem; }
-      .about-visual { max-width: 340px; }
-
-      .services-header { grid-template-columns: 1fr; gap: 1.5rem; }
-      .services-grid { grid-template-columns: 1fr 1fr; }
-
-      .video-grid { grid-template-columns: 1fr; }
-
-      #contact { grid-template-columns: 1fr; gap: 3rem; }
-      .form-row { grid-template-columns: 1fr; }
-
-      footer { grid-template-columns: 1fr; text-align: center; gap: 1.2rem; }
-      .footer-social { justify-content: center; }
-      .footer-copy { text-align: center; }
-    }
-
-    @media (max-width: 560px) {
-      .services-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kreative Savages — Content Creator &amp; Brand Maker | Port Moresby, PNG</title>
+<meta name="description" content="Kreative Savages is an independent Digital Media production house in Port Moresby, Papua New Guinea — videography, photography, audio production, graphics design and digital marketing.">
+<meta property="og:title" content="Kreative Savages — Content Creator &amp; Brand Maker">
+<meta property="og:description" content="Independent Digital Media production house in Port Moresby, PNG. Videography \ Photography \ Audio \ Graphics \ Digital Marketing.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/logo-red.png">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav id="navbar">
-    <a href="#hero" class="nav-logo">Kreative<span>.</span>Savages</a>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="nav-brand" href="index.html">
+      <img src="assets/logo-red.png" alt="Kreative Savages logo">
+      <span>KREATIVE <em>SAVAGES</em></span>
+    </a>
+    <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
     <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="index.html#works">Past Works</a></li>
+      <li><a href="videos.html">Videos</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
     </ul>
-    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
+  </div>
+</header>
 
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-grid-lines"></div>
-    <div style="position:relative; z-index:2;">
-      <p class="hero-eyebrow">Papua New Guinea · Est. Digital Media</p>
-      <h1 class="hero-title">We Tell<br/><em>Stories</em><br/>That Matter</h1>
-      <p class="hero-sub">Film. Sound. Design. Strategy. A creative studio transforming society through bold digital media production.</p>
-      <div class="hero-actions">
-        <a href="#services" class="btn-primary">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L13 7M13 7L7 13M13 7H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Explore Services
-        </a>
-        <a href="#work" class="btn-ghost">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5l3 2-3 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          View Work
-        </a>
-      </div>
-    </div>
-    <div class="hero-scroll-hint">Scroll</div>
-  </section>
-
-  <!-- MARQUEE -->
-  <div class="marquee-wrap">
-    <div class="marquee-track">
-      <span class="marquee-item">Videography<span>✦</span></span>
-      <span class="marquee-item">Photography<span>✦</span></span>
-      <span class="marquee-item">Audio Production<span>✦</span></span>
-      <span class="marquee-item">Graphics Design<span>✦</span></span>
-      <span class="marquee-item">Digital Marketing<span>✦</span></span>
-      <span class="marquee-item">Brand Creation<span>✦</span></span>
-      <span class="marquee-item">Videography<span>✦</span></span>
-      <span class="marquee-item">Photography<span>✦</span></span>
-      <span class="marquee-item">Audio Production<span>✦</span></span>
-      <span class="marquee-item">Graphics Design<span>✦</span></span>
-      <span class="marquee-item">Digital Marketing<span>✦</span></span>
-      <span class="marquee-item">Brand Creation<span>✦</span></span>
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-rings"><i></i><i></i><i></i></div>
+  <div class="wrap">
+    <img class="hero-logo" src="assets/logo-red.png" alt="Kreative Savages — afro-styled character with play button">
+    <p class="hero-kicker">Photography \ Videography \ Graphics Design</p>
+    <h1>
+      <span class="line"><span>Content Creator</span></span>
+      <span class="line"><span>&amp; Brand Maker</span></span>
+    </h1>
+    <p class="hero-sub">A progressive independent Digital Media production house from Port Moresby, Papua New Guinea — fresh, unique and savage since 2013.</p>
+    <div class="hero-cta">
+      <a class="btn btn-solid" href="index.html#services">Our Services</a>
+      <a class="btn btn-ghost" href="videos.html">Watch Our Work</a>
     </div>
   </div>
+  <div class="scroll-hint" aria-hidden="true"></div>
+</section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="about-visual reveal">
-      <div class="about-rect"></div>
-      <div class="about-inner">
-        <div class="about-stat">
-          <div class="about-stat-num">17+</div>
-          <div class="about-stat-label">Years of Experience</div>
-        </div>
-        <div class="about-stat-divider"></div>
-        <div class="about-stat">
-          <div class="about-stat-num">5</div>
-          <div class="about-stat-label">Core Disciplines</div>
-        </div>
-      </div>
-    </div>
-    <div class="about-content reveal" style="transition-delay:0.15s">
-      <p class="section-label">Who We Are</p>
-      <h2 class="section-title">Kreative.<br/>Relentless.</h2>
-      <p class="section-body">
-        Kreative Savages is a full-spectrum digital media production studio based in Papua New Guinea. We bring together film, sound, visual art and digital strategy under one roof — delivering work that moves people.
-      </p>
-      <div class="mission-box">
-        <p>"Our Mission is to transform society through Digital Media and to nurture positive progression in our communities."</p>
-      </div>
-      <div style="margin-top:2.5rem">
-        <a href="https://drive.google.com/uc?id=1FVta9KsyxcvcBIxHySYFgCBl90Bum0_a&export=download" class="btn-ghost" target="_blank">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M7 9l-3-3M7 9l3-3M1 12h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Download Company Profile
-        </a>
-      </div>
-    </div>
-  </section>
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Videography <b>\</b></span><span>Photography <b>\</b></span><span>Audio Production <b>\</b></span><span>Graphics Design <b>\</b></span><span>Digital Marketing <b>\</b></span><span>Brand Campaigns <b>\</b></span>
+    <span>Videography <b>\</b></span><span>Photography <b>\</b></span><span>Audio Production <b>\</b></span><span>Graphics Design <b>\</b></span><span>Digital Marketing <b>\</b></span><span>Brand Campaigns <b>\</b></span>
+  </div>
+</div>
 
-  <!-- SERVICES -->
-  <section id="services">
-    <div class="services-header reveal">
-      <div>
-        <p class="section-label">What We Do</p>
-        <h2 class="section-title">Our<br/>Services</h2>
-      </div>
-      <p class="section-body" style="align-self:end">
-        From a single guerrilla video to a full brand campaign — we script, shoot, produce, and amplify your story across every medium.
-      </p>
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="kicker">What We Do</p>
+      <h2>Services</h2>
+      <p class="lead">We specialize in Videography, Photography, Music &amp; Audio Production, Graphics Design, Brand Campaigns and Digital Marketing.</p>
     </div>
     <div class="services-grid">
-      <div class="service-card reveal">
-        <div class="service-num">01</div>
-        <div class="service-name">Videography</div>
-        <p class="service-desc">Impact videos, documentaries, TV commercials, music videos. We script, storyboard, shoot and produce every frame with intention.</p>
+      <article class="svc reveal" style="--d:.05s">
+        <span class="num">01</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3"/></svg>
+        <h3>Video Production</h3>
+        <p>We script, storyboard, shoot and produce — from Impact (Guerilla) videos for online publications to documentaries, television commercials and music videos.</p>
+      </article>
+      <article class="svc reveal" style="--d:.12s">
+        <span class="num">02</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        <h3>Photography</h3>
+        <p>High-standard photography from creative capture to post production — live and staged events, creative photography and studio photography.</p>
+      </article>
+      <article class="svc reveal" style="--d:.19s">
+        <span class="num">03</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        <h3>Audio Production</h3>
+        <p>Built on 17+ years in PNG's independent music scene — recording and producing for musicians and video productions alike.</p>
+      </article>
+      <article class="svc reveal" style="--d:.26s">
+        <span class="num">04</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>
+        <h3>Graphics Design</h3>
+        <p>Unique, trend-evolving design for any medium — from print production to web graphics. Flexible concepts, delivered exceptionally.</p>
+      </article>
+      <article class="svc reveal" style="--d:.33s">
+        <span class="num">05</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+        <h3>Digital Marketing</h3>
+        <p>A strong ICT background merged with Digital Media Production — complete packaged solutions from brand creation to social media brand campaigns.</p>
+      </article>
+      <article class="svc reveal" style="--d:.4s">
+        <span class="num">06</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <h3>Brand Campaigns</h3>
+        <p>Total online presence built from the ground up — websites, social platforms and campaign strategy for brands, movements and communities.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="kicker">Why We Do It</p>
+      <h2>Our Mission</h2>
+    </div>
+    <p class="mission-quote reveal" style="--d:.1s">"To <b>transform society</b> through Digital Media and to nurture <b>positive progression</b> in our communities."</p>
+    <p class="mission-note reveal" style="--d:.2s">We live up to this through our efforts in bringing awareness and exposure to the changes in the digital realm — and the evident impact our productions have had on our communities.</p>
+    <div class="stats">
+      <div class="stat reveal" style="--d:.05s"><span class="n" data-count="2013">0</span><span class="l">Established</span></div>
+      <div class="stat reveal" style="--d:.12s"><span class="n" data-count="17" data-suffix="+">0</span><span class="l">Years in Music</span></div>
+      <div class="stat reveal" style="--d:.19s"><span class="n" data-count="6">0</span><span class="l">Service Lines</span></div>
+      <div class="stat reveal" style="--d:.26s"><span class="n" data-count="100" data-suffix="%">0</span><span class="l">Independent</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="works">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="kicker">Track Record</p>
+      <h2>Past Works</h2>
+      <p class="lead">Work we have been involved in to date.</p>
+    </div>
+    <div class="works-grid">
+      <article class="work reveal" style="--d:.05s">
+        <span class="tag">Video Production</span>
+        <h3>Bilum Mama</h3>
+        <p>An International Trade Congress-funded documentary on the PNG women who weave Bilums for export. Kreative Savages held exclusive production rights.</p>
+        <a class="more" href="https://www.youtube.com/watch?v=tHK5zFj7akM" target="_blank" rel="noopener">Watch →</a>
+      </article>
+      <article class="work reveal" style="--d:.1s">
+        <span class="tag">Music Videos</span>
+        <h3>Pom City — Naka Blood</h3>
+        <p>Shot and produced the infamous "Pom City" — the first ever PNG music video to go viral on the Internet, shot on a Canon Ixus 220 point-and-shoot.</p>
+        <a class="more" href="https://www.youtube.com/watch?v=GiLylc9HZiE" target="_blank" rel="noopener">Watch →</a>
+      </article>
+      <article class="work reveal" style="--d:.15s">
+        <span class="tag">Music Videos</span>
+        <h3>Kiri O — Channel X Crew</h3>
+        <p>Produced the music video "Kiri O". Channel X Crew went on to win Best Debut Song that year.</p>
+        <a class="more" href="https://www.youtube.com/watch?v=OfwJJheEgM8" target="_blank" rel="noopener">Watch →</a>
+      </article>
+      <article class="work reveal" style="--d:.2s">
+        <span class="tag">Television</span>
+        <h3>Tanim Graun TV Series</h3>
+        <p>Collaborated with Masalai Communication on episodes of the popular Tanim Graun talk-show program.</p>
+      </article>
+      <article class="work reveal" style="--d:.25s">
+        <span class="tag">Advocacy</span>
+        <h3>Governor Gary Juffa Speeches</h3>
+        <p>Voluntarily capturing and publishing Governor Juffa's keynote speeches — including his landmark statement for West Papua's independence.</p>
+        <a class="more" href="https://www.youtube.com/watch?v=Cje0vAMVaUA" target="_blank" rel="noopener">Watch →</a>
+      </article>
+      <article class="work reveal" style="--d:.3s">
+        <span class="tag">Photography</span>
+        <h3>West Papua Flag Raising</h3>
+        <p>Official photography for the Free West Papua Campaign's inaugural flag-raising ceremonies in Port Moresby, 2015 &amp; 2016.</p>
+      </article>
+      <article class="work reveal" style="--d:.35s">
+        <span class="tag">Photography</span>
+        <h3>Ela Motors Hilux 2015 Launch</h3>
+        <p>Outsourced event photography for the launch of the 2015 Toyota Hilux — imagery used across their media outlets. Plus official photography for the 2015 AUS/PNG Hip-Hop &amp; Reggae Concert at Lamana Gold Club.</p>
+      </article>
+      <article class="work reveal" style="--d:.4s">
+        <span class="tag">Graphics Design</span>
+        <h3>PNG FM Music Awards</h3>
+        <p>Designed and produced all PNG Music Awards plaques and certificates, 2003–2005. Ongoing design and video contributions to the West Papua Campaign.</p>
+      </article>
+      <article class="work reveal" style="--d:.45s">
+        <span class="tag">Brand Marketing</span>
+        <h3>People's Movement for Change</h3>
+        <p>Created and propagated the party's total online presence — website, radio stream and every trending social media platform.</p>
+        <a class="more" href="https://www.pmfcparty.com" target="_blank" rel="noopener">Visit →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap reveal">
+    <h2>Got a story to tell?</h2>
+    <p>Let's script it, shoot it, mix it and make it savage.</p>
+    <a class="btn btn-solid" href="contact.html">Work With Us</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo-red.png" alt="Kreative Savages logo">
+        <p>Independent Digital Media production house and creative hub for the independent creative communities in Port Moresby, Papua New Guinea.</p>
       </div>
-      <div class="service-card reveal" style="transition-delay:0.1s">
-        <div class="service-num">02</div>
-        <div class="service-name">Photography</div>
-        <p class="service-desc">High-standard photography from creative capture to post production — covering live events, staged productions, and studio sessions.</p>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="videos.html">Videos</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
       </div>
-      <div class="service-card reveal" style="transition-delay:0.2s">
-        <div class="service-num">03</div>
-        <div class="service-name">Audio Production</div>
-        <p class="service-desc">17+ years in PNG's independent music scene. Professional recording and production for musicians, podcasts, and video soundscapes.</p>
-      </div>
-      <div class="service-card reveal" style="transition-delay:0.1s">
-        <div class="service-num">04</div>
-        <div class="service-name">Graphics Design</div>
-        <p class="service-desc">Trend-forward design for any medium — print, digital, web. Creative concepts that evolve with your brand and exceed expectations.</p>
-      </div>
-      <div class="service-card reveal" style="transition-delay:0.2s">
-        <div class="service-num">05</div>
-        <div class="service-name">Digital Marketing</div>
-        <p class="service-desc">End-to-end brand creation and campaign management. ICT-backed strategy meets creative production for maximum social impact.</p>
-      </div>
-      <div class="service-card reveal" style="transition-delay:0.3s">
-        <div class="service-num">06</div>
-        <div class="service-name">Brand Strategy</div>
-        <p class="service-desc">Complete packaged solutions from brand identity to campaign deployment — telling your story across every platform cohesively.</p>
+      <div>
+        <h4>Find Us Online</h4>
+        <ul>
+          <li><a href="https://www.youtube.com/@kreativesavages" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="https://www.facebook.com/kreativesavages" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.linkedin.com/company/kreativesavages" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://twitter.com/kreativesavages" target="_blank" rel="noopener">Twitter / X</a></li>
+          <li><a href="mailto:mk@kreativesavages.com">mk@kreativesavages.com</a></li>
+        </ul>
       </div>
     </div>
-  </section>
-
-  <!-- WORK -->
-  <section id="work">
-    <div class="work-header reveal">
-      <p class="section-label">Our Work</p>
-      <h2 class="section-title">Selected<br/>Productions</h2>
+    <div class="foot-legal">
+      <span>© <span id="year"></span> <b>Kreative Savages Limited</b>. All rights reserved.</span>
+      <span>Registered in Papua New Guinea — IPA Company No. <b>1-109091</b> · TIN <b>500582736</b></span>
     </div>
-    <div class="video-grid reveal">
-      <div class="video-card">
-        <div class="video-placeholder">
-          <div class="video-play-btn">▶</div>
-          <span class="video-label">Commercials</span>
-        </div>
-      </div>
-      <div class="video-card">
-        <div class="video-placeholder">
-          <div class="video-play-btn">▶</div>
-          <span class="video-label">Documentaries</span>
-        </div>
-      </div>
-      <div class="video-card">
-        <div class="video-placeholder">
-          <div class="video-play-btn">▶</div>
-          <span class="video-label">Music Videos</span>
-        </div>
-      </div>
-    </div>
-    <div class="work-cta-wrap reveal">
-      <a href="https://www.youtube.com/@kreativesavages" target="_blank" class="btn-primary">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L13 7M13 7L7 13M13 7H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        View Full Portfolio on YouTube
-      </a>
-    </div>
-  </section>
+  </div>
+</footer>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="contact-info reveal">
-      <p class="section-label">Get In Touch</p>
-      <h2 class="section-title">Let's Make<br/>Something.</h2>
-      <p class="section-body">
-        Ready to bring your vision to life? We'd love to hear about your project. Reach out and let's start a conversation.
-      </p>
-      <div class="contact-detail">
-        <span class="contact-detail-label">Email</span>
-        <a href="mailto:mk@kreativesavages.com">mk@kreativesavages.com</a>
-      </div>
-      <div class="contact-detail">
-        <span class="contact-detail-label">Follow Us</span>
-        <span>
-          <a href="https://www.youtube.com/@kreativesavages" target="_blank" style="margin-right:1rem">YouTube</a>
-          <a href="https://www.facebook.com/kreativesavages/" target="_blank" style="margin-right:1rem">Facebook</a>
-          <a href="https://www.linkedin.com/company/kreativesavages" target="_blank" style="margin-right:1rem">LinkedIn</a>
-          <a href="https://twitter.com/kreativesavages" target="_blank">Twitter / X</a>
-        </span>
-      </div>
-      <div class="contact-detail">
-        <span class="contact-detail-label">Based In</span>
-        <span>Papua New Guinea</span>
-      </div>
-    </div>
-    <div class="reveal" style="transition-delay:0.15s">
-      <div class="contact-form" id="contactForm">
-        <div class="form-row">
-          <div class="form-field">
-            <label>First Name</label>
-            <input type="text" placeholder="John" />
-          </div>
-          <div class="form-field">
-            <label>Last Name</label>
-            <input type="text" placeholder="Doe" />
-          </div>
-        </div>
-        <div class="form-field">
-          <label>Email</label>
-          <input type="email" placeholder="you@email.com" />
-        </div>
-        <div class="form-field">
-          <label>Service Interested In</label>
-          <select>
-            <option value="">Select a service…</option>
-            <option>Videography</option>
-            <option>Photography</option>
-            <option>Audio Production</option>
-            <option>Graphics Design</option>
-            <option>Digital Marketing</option>
-            <option>Brand Strategy</option>
-            <option>Other / Multiple</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label>Message</label>
-          <textarea placeholder="Tell us about your project…"></textarea>
-        </div>
-        <button class="btn-submit" onclick="handleSubmit(event)">Send Message</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="reveal">
-    <div class="footer-brand">Kreative<span>.</span>Savages</div>
-    <div class="footer-social">
-      <a href="https://www.youtube.com/@kreativesavages" target="_blank">YouTube</a>
-      <a href="https://www.facebook.com/kreativesavages/" target="_blank">Facebook</a>
-      <a href="https://www.linkedin.com/company/kreativesavages" target="_blank">LinkedIn</a>
-      <a href="https://twitter.com/kreativesavages" target="_blank">Twitter</a>
-    </div>
-    <p class="footer-copy">© 2025 Kreative Savages. All rights reserved.</p>
-  </footer>
-
-  <script>
-    // Navbar scroll effect
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 60);
-    });
-
-    // Mobile menu toggle
-    function toggleMenu() {
-      const links = document.querySelector('.nav-links');
-      const hb = document.getElementById('hamburger');
-      const open = links.style.display === 'flex';
-      links.style.display = open ? 'none' : 'flex';
-      links.style.position = 'fixed';
-      links.style.top = '70px';
-      links.style.left = '0';
-      links.style.right = '0';
-      links.style.flexDirection = 'column';
-      links.style.background = 'rgba(10,10,10,0.97)';
-      links.style.padding = '2rem';
-      links.style.gap = '1.5rem';
-      links.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
-      if (open) links.style.display = 'none';
-      hb.classList.toggle('open', !open);
-    }
-
-    // Close mobile menu on link click
-    document.querySelectorAll('.nav-links a').forEach(a => {
-      a.addEventListener('click', () => {
-        const links = document.querySelector('.nav-links');
-        links.style.display = 'none';
-      });
-    });
-
-    // Scroll reveal
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // Simple form handler
-    function handleSubmit(e) {
-      e.preventDefault();
-      const btn = e.target;
-      btn.textContent = 'Sending…';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.textContent = 'Message Sent ✓';
-        btn.style.background = '#2d6a3f';
-        setTimeout(() => {
-          btn.textContent = 'Send Message';
-          btn.style.background = '';
-          btn.disabled = false;
-        }, 3000);
-      }, 1200);
-    }
-  </script>
+<script src="js/main.js"></script>
 </body>
 </html>
